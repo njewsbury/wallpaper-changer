@@ -1,0 +1,24 @@
+{
+  "name": "wallpaper-changer",
+  "version": "0.0.1",
+  "description": "Electron+NodeJS base wallpaper changer",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "windows",
+    "wallpaper",
+    "changer",
+    "nodejs"
+  ],
+  "author": "Nathan Jewsbury",
+  "license": "MIT",
+  "dependencies": {
+    "sqlite3": "5.0.0",
+    "wallpaper": "4.4.2"
+  },
+  "devDependencies": {
+    "electron": "11.0.4"
+  }
+}

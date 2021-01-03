@@ -1,0 +1,1 @@
+select * from wallpaper_cache where wp_used = 0;

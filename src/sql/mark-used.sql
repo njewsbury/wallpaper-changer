@@ -1,0 +1,1 @@
+update wallpaper_cache set wp_used = wp_used + 1 where wp_id = ?;
