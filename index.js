@@ -5,6 +5,7 @@ const appconfig = require('./conf/appconfig');
 const WallpaperSelector = require('./src/wallpaper-selector');
 const RedditFinder = require('./src/finders/reddit-wallpaper-finder');
 
+// TODO: Look into | use 'TRAY' to keep app running.
 const {app, BrowserWindow} = require('electron');
 const wallpaper = require('wallpaper');
 const path = require('path');
