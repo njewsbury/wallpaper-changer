@@ -1,6 +1,16 @@
+'use strict';
 
+/**
+ * WallpaperFinder Interface
+ * 
+ * @author njewsbury
+ * @since 2021-01-14
+ */
 class WallpaperFinder {
 
+    /**
+     * No-op constructor.
+     */
     constructor() {
 
     }

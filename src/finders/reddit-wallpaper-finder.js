@@ -1,5 +1,5 @@
+'use strict';
 
-const {request} = require('http');
 const https = require('https');
 const WallpaperFinder = require('../wallpaper-finder');
 
@@ -23,10 +23,28 @@ const PARAM_DEFAULTS = {
     'time': 'all',
     'limit': 100,
     'restrict_subreddit': 'on'
-}
+};
 
+/**
+ * RedditWallpaperFinder.
+ * 
+ * Reddit based wallpaper finder. Utilize the reddit
+ * search API to locate a new wallpaper.
+ * 
+ * @author njewsbury
+ * @since 2021-01-14
+ */
 class RedditWallpaperFinder extends WallpaperFinder {
 
+    /**
+     * Basic Constructor.
+     * 
+     * @param {Json} conf general reddit search config.
+     * @param {Array<String>} conf.subreddits An array of subreddits to query
+     * @param {String} conf.sort The sort direction for results [new, top]
+     * 
+     * // todo: more
+     */
     constructor(conf) {
         super();
         this.config = {
@@ -36,9 +54,14 @@ class RedditWallpaperFinder extends WallpaperFinder {
             'limit': conf.limit || PARAM_DEFAULTS['limit'],
             'restrict_subreddit': conf.restrict_subreddit || PARAM_DEFAULTS['restrict_subreddit'],
             'query': conf.query
-        }
+        };
     }
 
+    /**
+     * List available wallpapers from the finders source.
+     * 
+     * @param {String} startingId The starting reddit ID to query from (pagination)
+     */
     async listAvailableWallpapers(startingId) {
         const subredditString = this.config.subreddits.join('+');
 
@@ -68,7 +91,7 @@ class RedditWallpaperFinder extends WallpaperFinder {
             'path': fullpath,
             'method': 'GET',
             'headers': {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             }
         };
 
@@ -106,7 +129,7 @@ class RedditWallpaperFinder extends WallpaperFinder {
             return [];
         }
 
-        const resultSet = jsonResult.data.children;
+        // const resultSet = jsonResult.data.children;
         const subsetResults = [];
         for (const child of jsonResult.data.children) {
             if (child.data.post_hint !== 'image') {
@@ -124,7 +147,6 @@ class RedditWallpaperFinder extends WallpaperFinder {
             // console.log(details);
             subsetResults.push(details);
         }
-
 
         return subsetResults;
 

@@ -29,6 +29,11 @@ const SQL_FILES = {
  */
 class WallpaperSelector {
 
+    /**
+     * Basic Constructor.
+     * 
+     * @param {Json} config 
+     */
     constructor(config) {
         this.finders = [];
         this.redditFinder = undefined;
@@ -38,6 +43,14 @@ class WallpaperSelector {
         this.db = undefined;
     }
 
+    /**
+     * Selection Database Initializer.
+     * 
+     * Initialize the sqlite wallpaper database. Used to cache database results
+     * so future changes don't require a full "search".
+     * 
+     * @return {Promise<Void>} promise completed once database initialized.
+     */
     async initializeSelectorDb() {
         const self = this;
         return new Promise((resolve, reject) => {
@@ -59,6 +72,11 @@ class WallpaperSelector {
         });
     }
 
+    /**
+     * Add a new wallpaper finder.
+     * 
+     * @param {WallpaperFinder} finder An independant wallpaper finder.
+     */
     addFinder(finder) {
         this.finders.push(finder);
     }
@@ -72,6 +90,11 @@ class WallpaperSelector {
         this.redditFinder = redditFinder;
     }
 
+    /**
+     * Select a new wallpaper.
+     * 
+     * @return {Promise<String>} The selected wallpaper absolute path.
+     */
     async selectNewWallpaper() {
         let allAvailableWallpapers = [];
         for (const finder of this.finders) {
@@ -123,6 +146,11 @@ class WallpaperSelector {
         return await downloadImg;
     }
 
+    /**
+     * Extract wallpaper from cache DB.
+     * 
+     * @return {Promise<Array<Json>>} A promise that resolves containing cached wallpaper records.
+     */
     async _extractCached() {
         return new Promise((resolve, reject) => {
             if (!this.db) {
@@ -136,6 +164,11 @@ class WallpaperSelector {
         });
     }
 
+    /**
+     * Purge the wallpaper cache.
+     * 
+     * @return {Promise<Void>} promise that resolves once purge is complete.
+     */
     async purgeCache() {
         return new Promise((resolve, reject) => {
             if (!this.db) {
@@ -150,7 +183,6 @@ class WallpaperSelector {
             });
         });
     }
-
 }
 
 module.exports = WallpaperSelector;

@@ -4,7 +4,10 @@
   "description": "Electron+NodeJS base wallpaper changer",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "build": "gulp",
+    "test": "",
+    "lint": "eslint --format html . -o eslint.output.html",
+    "start": "npm run lint && npm run build && electron ."
   },
   "keywords": [
     "windows",
@@ -19,6 +22,16 @@
     "wallpaper": "4.4.2"
   },
   "devDependencies": {
+    "eslint": "7.1.0",
+    "eslint-config-google": "0.14.0",
+    "gulp": "4.0.2",
+    "gulp-concat": "2.6.1",
+    "gulp-file-include": "2.2.2",
+    "gulp-sass": "4.1.0",
+    "gulp-sourcemaps": "2.6.5",
+    "gulp-terser-js": "5.2.2",
+    "node-sass": "4.14.1",
+    "rimraf": "3.0.2",
     "electron": "11.0.4"
   }
 }
