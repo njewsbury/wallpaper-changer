@@ -5,10 +5,10 @@ const appconfig = require('./conf/appconfig');
 const WallpaperSelector = require('./src/wallpaper-selector');
 const RedditFinder = require('./src/finders/reddit-wallpaper-finder');
 
-// TODO: Look into | use 'TRAY' to keep app running.
-const {app, BrowserWindow} = require('electron');
-const wallpaper = require('wallpaper');
 const path = require('path');
+const {app, BrowserWindow, Tray, Menu} = require('electron');
+const logger = require('electron-log');
+const wallpaper = require('wallpaper');
 
 // https://www.reddit.com/r/wallpaper+wallpapers/search.json?sort=new&restrict_sr=on&&q=3840x2160&limit=2
 /**
@@ -31,18 +31,57 @@ class WallpaperChangerjs {
         this.selector = new WallpaperSelector({});
         this.electronWindow = {};
 
-        this.electronMenuTemplate = [
-            {
-                'label': 'File',
-                'role': 'file'
-            }
-        ];
+        this.menuTemplate = {
+            'prime': [
+
+            ],
+            'tray': [
+                {
+                    'label': 'Enabled',
+                    'type': 'checkbox',
+                    'checked': true
+                },
+                {
+                    'type': 'separator'
+                },
+                {
+                    'label': 'Save current wallpaper'
+                },
+                {
+                    'label': 'Block current wallpaper'
+                },
+                {
+                    'label': 'Like current wallpaper'
+                },
+                {
+                    'label': 'Next wallpaper'
+                },
+                {
+                    'type': 'separator'
+                },
+                {
+                    'label': 'Settings',
+                    'click': (item, window, event) => {
+                        if (!this.electronWindow || !this.electronWindow.prime) {
+                            return;
+                        }
+                        this.electronWindow.prime.show();
+                    }
+                },
+                {
+                    'label': 'Quit',
+                    'role': 'quit'
+                }
+            ]
+        };
+
     }
 
     /**
      * Initialize the electronjs window.
      */
     initializeElectronWindow() {
+        logger.info('Initializing the electronJs window and tray.');
         this.electronWindow.prime = new BrowserWindow({
             'width': appconfig.width,
             'height': appconfig.height,
@@ -53,6 +92,15 @@ class WallpaperChangerjs {
                 'contextIsolation': true
             }
         });
+        this.electronWindow.prime.on('close', (event) => {
+            event.sender.hide();
+            event.preventDefault();
+        });
+
+        this.electronWindow.tray = new Tray(path.join(__dirname, 'favicon.ico'));
+        const trayMenu = Menu.buildFromTemplate(this.menuTemplate.tray);
+        this.electronWindow.tray.setContextMenu(trayMenu);
+
         this.electronWindow.prime.loadFile(path.join(__dirname, 'dist', 'index.html'));
     }
 
@@ -73,7 +121,6 @@ class WallpaperChangerjs {
      */
     async start() {
         // await this.selector.initializeSelectorDb();
-
         this.selector.addRedditFinder(new RedditFinder({
             'query': '(3840x2160) AND '
                 + '(landscape OR space OR sci-fi OR winter OR forest OR Canada OR Alaska OR '
@@ -88,11 +135,6 @@ class WallpaperChangerjs {
     }
 }
 
-
-if (!app) {
-    return;
-}
-
 const wpcjs = new WallpaperChangerjs();
 app.whenReady().then(() => {
     wpcjs.initializeElectronWindow();
@@ -101,14 +143,14 @@ app.whenReady().then(() => {
 });
 
 app.on('before-quit', () => {
-    console.log('quitting');
+    logger.info('Quitting.');
     if (wpcjs) {
         wpcjs.release();
     }
 });
 
 app.on('activate', () => {
-    console.log('activate!');
+    logger.info('Activating.');
 });
 
 

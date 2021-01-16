@@ -18,6 +18,8 @@
   "author": "Nathan Jewsbury",
   "license": "MIT",
   "dependencies": {
+    "electron-log": "4.3.1",
+    "electron-settings": "4.0.2",
     "sqlite3": "5.0.0",
     "wallpaper": "4.4.2"
   },
