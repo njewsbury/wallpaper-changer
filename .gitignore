@@ -5,3 +5,5 @@ wallpapers/**
 **.db
 *.output.*
 **.log
+dist
+dist/**

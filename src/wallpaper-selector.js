@@ -3,9 +3,11 @@
 const path = require('path');
 const fs = require('fs');
 const https = require('https');
-
+const logger = require('electron-log');
 const sqlite = require('sqlite3');
 const Database = sqlite.Database;
+
+
 const DATABASE_PATH = path.join(__dirname, '..', 'wallpapers.db');
 
 const SQL_FILES = {
@@ -54,16 +56,16 @@ class WallpaperSelector {
     async initializeSelectorDb() {
         const self = this;
         return new Promise((resolve, reject) => {
-
-            self.db = new Database(DATABASE_PATH, sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE, (err) => {
+            self.db = new Database(DATABASE_PATH, sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE, async (err) => {
                 if (err) {
-                    console.log(err);
+                    logger.error('Unable to open DB', err);
                     return reject(new Error('Unable to open DB.'));
                 }
-                const initialSql = fs.readFileSync(SQL_FILES['initializeDb']);
+                const initialSql = fs.readFileSync(SQL_FILES['initializeDb'], 'utf8');
 
                 self.db.run(initialSql, [], (initErr) => {
                     if (initErr) {
+                        logger.error('Unable to initialize database schema', err);
                         return reject(new Error('Unable to initialize DB.'));
                     }
                     return resolve();

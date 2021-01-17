@@ -7,7 +7,10 @@
     "build": "gulp",
     "test": "",
     "lint": "eslint --format html . -o eslint.output.html",
-    "start": "npm run lint && npm run build && electron ."
+    "start": "npm run build && electron .",
+    "dist": "npm run build && electron-builder",
+    "pack": "npm run build && electron-builder --dir",
+    "postinstall": "electron-builder install-app-deps"
   },
   "keywords": [
     "windows",
@@ -17,13 +20,27 @@
   ],
   "author": "Nathan Jewsbury",
   "license": "MIT",
+  "build": {
+    "appId": "ca.jewsbury.wallpaperchanger",
+    "productName": "WallpaperChangerJS",
+    "files": [
+      "conf/**",
+      "index.js",
+      "favicon.ico",
+      "src/**",
+      "node_modules/**/*",
+      "package.json"
+    ]
+  },
   "dependencies": {
     "electron-log": "4.3.1",
     "electron-settings": "4.0.2",
-    "sqlite3": "5.0.0",
+    "sqlite3": "^5.0.1",
     "wallpaper": "4.4.2"
   },
   "devDependencies": {
+    "electron": "11.0.4",
+    "electron-builder": "22.9.1",
     "eslint": "7.1.0",
     "eslint-config-google": "0.14.0",
     "gulp": "4.0.2",
@@ -33,7 +50,6 @@
     "gulp-sourcemaps": "2.6.5",
     "gulp-terser-js": "5.2.2",
     "node-sass": "4.14.1",
-    "rimraf": "3.0.2",
-    "electron": "11.0.4"
+    "rimraf": "3.0.2"
   }
 }
